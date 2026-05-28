@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAC 篩選表格產生器</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#f5f4f0;--surface:#fff;--border:#e2e0d8;
+  --text:#1a1916;--muted:#7a7870;--hint:#b0aea6;
+  --accent:#2a5c3f;--accent-hover:#1e4530;--accent-light:#e8f3ec;
+  --green-text:#1a5c35;--danger:#c0392b;
+  --mono:'DM Mono',monospace;--sans:'Noto Sans TC',sans-serif;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:inherit;}
+
+header{
+  background:var(--surface);border-bottom:1px solid var(--border);
+  padding:20px 40px;display:flex;align-items:center;gap:12px;
+}
+header h1{font-size:17px;font-weight:500;letter-spacing:-0.01em;}
+.tag{font-size:11px;padding:3px 10px;border-radius:20px;background:var(--bg);
+  border:1px solid var(--border);color:var(--muted);font-family:var(--mono);}
+
+main{max-width:960px;margin:0 auto;padding:36px 40px;
+  display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
+
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.panel-hd{padding:12px 18px;border-bottom:1px solid var(--border);
+  font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;}
+.panel-bd{padding:18px;}
+
+.field{margin-bottom:16px;}
+.field:last-of-type{margin-bottom:0;}
+label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;}
+input[type=number],input[type=text]{
+  width:100%;font-family:var(--mono);font-size:13px;padding:9px 11px;
+  border:1px solid var(--border);border-radius:8px;background:var(--bg);
+  color:var(--text);outline:none;transition:border-color .15s;
+}
+input:focus{border-color:var(--accent);}
+.hint{font-size:11px;color:var(--hint);margin-top:4px;}
+
+.divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.stat{background:var(--bg);border-radius:8px;padding:12px 14px;}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;}
+.stat-val{font-family:var(--mono);font-size:20px;font-weight:500;}
+
+.btn{
+  width:100%;padding:11px;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--accent);color:#fff;border:none;border-radius:8px;
+  font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;
+  transition:background .15s,transform .1s;
+}
+.btn:hover{background:var(--accent-hover);}
+.btn:active{transform:scale(.98);}
+.btn svg{width:15px;height:15px;flex-shrink:0;}
+
+#status{font-size:12px;text-align:center;margin-top:8px;min-height:16px;
+  font-family:var(--mono);color:var(--green-text);}
+
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;table-layout:fixed;}
+th{
+  background:var(--bg);padding:9px 12px;text-align:center;
+  border-bottom:1px solid var(--border);font-weight:500;color:var(--muted);font-size:11px;
+  white-space:nowrap;
+}
+th:first-child{text-align:left;}
+.flt{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:14px;height:14px;border:1px solid var(--border);border-radius:3px;
+  margin-left:5px;font-size:8px;color:var(--muted);vertical-align:middle;
+  background:var(--surface);
+}
+td{padding:7px 12px;text-align:center;border-bottom:1px solid var(--border);height:32px;}
+td:first-child{text-align:left;color:var(--hint);}
+td.v{color:var(--accent);font-weight:500;}
+tr:last-child td{border-bottom:none;}
+.tbl-foot{padding:10px 18px;font-size:11px;color:var(--hint);
+  border-top:1px solid var(--border);font-family:var(--mono);}
+
+@media(max-width:700px){
+  main{grid-template-columns:1fr;padding:20px 16px;}
+  header{padding:16px 20px;}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>MAC 篩選表格產生器</h1>
+  <span class="tag">.xlsx</span>
+  <span class="tag">AutoFilter</span>
+</header>
+
+<main>
+  <div class="panel">
+    <div class="panel-hd">設定</div>
+    <div class="panel-bd">
+      <div class="field">
+        <label>最大數字 N（產生 1 ~ N）</label>
+        <input type="number" id="maxNum" value="3000" min="1" max="99999"/>
+      </div>
+      <div class="field">
+        <label>欄位名稱（逗號分隔）</label>
+        <input type="text" id="colNames" value="MAC,mac1,mac2,mac3,mac4"/>
+        <p class="hint">第一欄為標題欄，其餘欄依序填入數值</p>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-lbl">資料列</div>
+          <div class="stat-val" id="sRows">12,000</div>
+        </div>
+        <div class="stat">
+          <div class="stat-lbl">總列數</div>
+          <div class="stat-val" id="sTotal">12,001</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <button class="btn" onclick="doDownload()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        下載 Excel
+      </button>
+      <div id="status"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-hd">預覽</div>
+    <div class="tbl-wrap">
+      <table id="prevTbl"></table>
+    </div>
+    <div class="tbl-foot" id="tbl-foot"></div>
+  </div>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+function getCols(){
+  return document.getElementById('colNames').value.split(',').map(s=>s.trim()).filter(Boolean);
+}
+function getMax(){
+  return Math.max(1,Math.min(99999,parseInt(document.getElementById('maxNum').value)||3000));
+}
+function update(){
+  const n=getMax(),cols=getCols(),dc=Math.max(1,cols.length-1);
+  const dr=n*dc;
+  document.getElementById('sRows').textContent=dr.toLocaleString();
+  document.getElementById('sTotal').textContent=(dr+1).toLocaleString();
+  renderPreview(cols,n,dc);
+}
+function renderPreview(cols,max,dc){
+  const show=Math.min(max*dc,16);
+  let html='<thead><tr>';
+  cols.forEach(c=>{
+    html+=`<th>${c}<span class="flt">▾</span></th>`;
+  });
+  html+='</tr></thead><tbody>';
+  let cnt=0;
+  outer:for(let n=1;n<=max;n++){
+    for(let d=0;d<dc;d++){
+      if(cnt>=show)break outer;
+      html+='<tr>';
+      cols.forEach((_,ci)=>{
+        if(ci===0)html+='<td></td>';
+        else if(ci-1===d)html+=`<td class="v">${n}</td>`;
+        else html+='<td></td>';
+      });
+      html+='</tr>';cnt++;
+    }
+  }
+  html+='</tbody>';
+  document.getElementById('prevTbl').innerHTML=html;
+  const rem=max*dc-show;
+  document.getElementById('tbl-foot').textContent=rem>0
+    ?`... 還有 ${rem.toLocaleString()} 列未顯示`
+    :`共 ${(max*dc).toLocaleString()} 列資料`;
+}
+function doDownload(){
+  const cols=getCols(),max=getMax(),dc=cols.length-1;
+  const st=document.getElementById('status');
+  st.style.color='var(--muted)';st.textContent='生成中...';
+  setTimeout(()=>{
+    try{
+      const wb=XLSX.utils.book_new();
+      const data=[cols];
+      for(let n=1;n<=max;n++){
+        for(let d=0;d<dc;d++){
+          data.push(cols.map((_,ci)=>ci===0?null:(ci-1===d?n:null)));
+        }
+      }
+      const ws=XLSX.utils.aoa_to_sheet(data);
+      ws['!cols']=cols.map((_,i)=>({wch:i===0?16:8}));
+      ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:0,c:cols.length-1}})};
+      XLSX.utils.book_append_sheet(wb,ws,'工作表1');
+      XLSX.writeFile(wb,`mac_篩選表格${max}.xlsx`);
+      st.style.color='var(--green-text)';
+      st.textContent=`✓ 已下載 mac_篩選表格${max}.xlsx`;
+    }catch(e){
+      st.style.color='var(--danger)';
+      st.textContent='錯誤：'+e.message;
+    }
+  },50);
+}
+document.getElementById('maxNum').addEventListener('input',update);
+document.getElementById('colNames').addEventListener('input',update);
+update();
+</script>
+</body>
+</html>
