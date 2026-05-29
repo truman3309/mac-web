@@ -199,7 +199,7 @@ td.v{color:var(--accent);font-weight:500;}
 <div class="page active" id="page-home">
   <div class="home-wrap">
     <h2>MAC 完整自動化工具</h2>
-    <p>上傳已填好 MAC 的 Excel（含「号段分配」工作表），自動產生「工廠使用」工作表，IMEI 複製至 A 欄，mac1~mac4 填入 B~E 欄。</p>
+    <p>上傳已填好 MAC 的 Excel（含「号段分配」工作表），自動產生「工廠使用」工作表，IMEI 複製至 A 欄，mac1~mac4 填入 B~E 欄，A/B/F/G 整欄黃色。</p>
 
     <div class="flow-card" style="display:none;">
       <div class="flow-card-hd">
@@ -227,16 +227,28 @@ td.v{color:var(--accent);font-weight:500;}
       </div>
       <div class="flow-card-bd">
         <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div><h4>上傳 Excel</h4><p>上傳含「号段分配」工作表的 .xlsx 檔案（需有 IMEI + MAC 欄位）</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div><h4>① 讀取 号段分配</h4><p>讀取「号段分配」工作表，取出全部 IMEI（A欄）與 MAC（B欄）資料</p></div>
+        </div>
+        <div class="flow-step">
           <div class="flow-num">3</div>
-          <div><h4>上傳已填好的 Excel</h4><p>需含「号段分配」工作表（IMEI + MAC）及已填入 mac1~mac4 的工作表</p></div>
+          <div><h4>② 整理 MAC → mac1~mac4</h4><p>將 MAC 每4筆為一組，橫排整理成 mac1、mac2、mac3、mac4</p></div>
         </div>
         <div class="flow-step">
           <div class="flow-num">4</div>
-          <div><h4>自動執行篩選填入</h4><p>整理 MAC 欄位，產生 MAC/mac1~mac4 橫排結果（B~E 欄）</p></div>
+          <div><h4>③ 建立「工廠使用」工作表</h4><p>在原始 Excel 中新增「工廠使用」工作表（若已存在則覆蓋）</p></div>
         </div>
         <div class="flow-step">
           <div class="flow-num">5</div>
-          <div><h4>自動建立「工廠使用」工作表</h4><p>複製 IMEI 至 A 欄，B~E 欄填入 mac1~mac4，F/G 欄為 pcba sn / 組裝 sn 標題</p></div>
+          <div><h4>④ 複製 IMEI + mac1~mac4</h4><p>A欄填入 IMEI，B~E欄填入 mac1~mac4，F欄標題「pcba sn(按照Thinkstart規則生成)」，G欄標題「組裝sn(按照Thinkstart規則生成)」</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">6</div>
+          <div><h4>⑤ 套用格式</h4><p>A、B、F、G 欄整欄設為黃色背景，欄寬自動調整</p></div>
         </div>
       </div>
     </div>
@@ -321,7 +333,7 @@ td.v{color:var(--accent);font-weight:500;}
         <div class="p-step" id="ps2">② 整理 MAC → mac1~mac4</div>
         <div class="p-step" id="ps3">③ 建立 工廠使用 工作表</div>
         <div class="p-step" id="ps4">④ 複製 IMEI + mac1~mac4</div>
-        <div class="p-step" id="ps5">⑤ 套用格式</div>
+        <div class="p-step" id="ps5">⑤ 套用黃色格式</div>
       </div>
     </div>
 
@@ -352,10 +364,10 @@ td.v{color:var(--accent);font-weight:500;}
                   <div class="s-icon s-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                   <span>新增工作表：</span><strong>工廠使用</strong>
                 </li>
-                <!--<li>
+                <li>
                   <div class="s-icon s-yellow"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
                   <span>黃色欄位：</span><strong>A、B、F、G</strong>
-                </li>-->
+                </li>
               </ul>
               <button class="btn btn-green" onclick="downloadResult()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -552,7 +564,7 @@ function processFile(file){
               setStep(5);
               setTimeout(()=>{
 
-                // ⑤ 套用（A,B,F,G 欄）
+                // ⑤ 套用黃色（A,B,F,G 欄）
                 const totalRows=newData.length;
                 const ys={fill:{patternType:'solid',fgColor:{rgb:'FFFF00'}}};
                 for(let r=0;r<totalRows;r++){
