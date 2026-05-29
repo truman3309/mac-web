@@ -199,7 +199,7 @@ td.v{color:var(--accent);font-weight:500;}
 <div class="page active" id="page-home">
   <div class="home-wrap">
     <h2>MAC 完整自動化工具</h2>
-    <p>上傳已填好 MAC 的 Excel（含「号段分配」工作表），自動產生「工廠使用」工作表，IMEI 複製至 A 欄，mac1~mac4 填入 B~E 欄，A/B/F/G 整欄黃色。</p>
+    <p>上傳已填好 MAC 的 Excel（含「号段分配」工作表），自動產生「工廠使用」工作表，IMEI 複製至 A 欄，mac1~mac4 填入 B~E 欄。</p>
 
     <div class="flow-card" style="display:none;">
       <div class="flow-card-hd">
@@ -248,7 +248,7 @@ td.v{color:var(--accent);font-weight:500;}
         </div>
         <div class="flow-step">
           <div class="flow-num">6</div>
-          <div><h4>⑤ 套用格式</h4><p>A、B、F、G 欄整欄設為黃色背景，欄寬自動調整</p></div>
+          <div><h4>⑤ 完成</h4><p>欄寬自動調整，下載結果 Excel</p></div>
         </div>
       </div>
     </div>
@@ -333,7 +333,7 @@ td.v{color:var(--accent);font-weight:500;}
         <div class="p-step" id="ps2">② 整理 MAC → mac1~mac4</div>
         <div class="p-step" id="ps3">③ 建立 工廠使用 工作表</div>
         <div class="p-step" id="ps4">④ 複製 IMEI + mac1~mac4</div>
-        <div class="p-step" id="ps5">⑤ 套用黃色格式</div>
+        <div class="p-step" id="ps5">⑤ 完成輸出</div>
       </div>
     </div>
 
@@ -364,10 +364,7 @@ td.v{color:var(--accent);font-weight:500;}
                   <div class="s-icon s-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
                   <span>新增工作表：</span><strong>工廠使用</strong>
                 </li>
-                <li>
-                  <div class="s-icon s-yellow"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
-                  <span>黃色欄位：</span><strong>A、B、F、G</strong>
-                </li>
+
               </ul>
               <button class="btn btn-green" onclick="downloadResult()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -390,13 +387,13 @@ td.v{color:var(--accent);font-weight:500;}
             <table>
               <thead>
                 <tr>
-                  <th class="cy">A　IMEI</th>
-                  <th class="cy">B　mac1</th>
+                  <th>A　IMEI</th>
+                  <th>B　mac1</th>
                   <th>C　mac2</th>
                   <th>D　mac3</th>
                   <th>E　mac4</th>
-                  <th class="cy">F　pcba sn</th>
-                  <th class="cy">G　組裝sn</th>
+                  <th>F　pcba sn</th>
+                  <th>G　組裝sn</th>
                 </tr>
               </thead>
               <tbody id="previewBody"></tbody>
@@ -479,7 +476,6 @@ updateGen();
 /* ══ 自動整合處理 ══ */
 let resultWB=null, baseName='', previewRows=[];
 const PREVIEW_LIMIT=200;
-const YELLOW_COLS=[0,1,5,6]; // A,B,F,G
 
 function onDragOver(e){e.preventDefault();document.getElementById('uploadZone').classList.add('drag');}
 function onDragLeave(){document.getElementById('uploadZone').classList.remove('drag');}
@@ -564,16 +560,6 @@ function processFile(file){
               setStep(5);
               setTimeout(()=>{
 
-                // ⑤ 套用黃色（A,B,F,G 欄）
-                const totalRows=newData.length;
-                const ys={fill:{patternType:'solid',fgColor:{rgb:'FFFF00'}}};
-                for(let r=0;r<totalRows;r++){
-                  YELLOW_COLS.forEach(c=>{
-                    const addr=XLSX.utils.encode_cell({r,c});
-                    if(!newWS[addr]) newWS[addr]={t:'s',v:''};
-                    newWS[addr].s=ys;
-                  });
-                }
                 newWS['!cols']=[{wch:18},{wch:16},{wch:16},{wch:16},{wch:16},{wch:28},{wch:28}];
 
                 XLSX.utils.book_append_sheet(wb,newWS,'工廠使用');
@@ -616,7 +602,7 @@ function buildPreview(){
     // A IMEI - yellow
     html+=`<td class="cy ${isHdr?'':'cv'}">${r[0]||''}</td>`;
     // B mac1 - yellow
-    html+=`<td class="cy ${r[1]?'cv':'ce'}">${r[1]||''}</td>`;
+    html+=`<td class="${r[1]?'cv':'ce'}">${r[1]||''}</td>`;
     // C mac2
     html+=`<td class="${r[2]?'cv':'ce'}">${r[2]||''}</td>`;
     // D mac3
@@ -624,9 +610,9 @@ function buildPreview(){
     // E mac4
     html+=`<td class="${r[4]?'cv':'ce'}">${r[4]||''}</td>`;
     // F pcba sn - yellow
-    html+=`<td class="cy ce">${r[5]||''}</td>`;
+    html+=`<td class="ce">${r[5]||''}</td>`;
     // G 組裝sn - yellow
-    html+=`<td class="cy ce">${r[6]||''}</td>`;
+    html+=`<td class="ce">${r[6]||''}</td>`;
     html+='</tr>';
   }
   document.getElementById('previewBody').innerHTML=html;
