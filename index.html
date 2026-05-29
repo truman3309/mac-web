@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MAC 工具箱</title>
+<title>MAC 完整自動化工具</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -15,12 +15,11 @@
 }
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;}
 
-/* ── Header ── */
 header{
   background:var(--surface);border-bottom:1px solid var(--border);
   padding:0 40px;display:flex;align-items:center;gap:0;position:sticky;top:0;z-index:100;
 }
-.logo{font-size:15px;font-weight:600;letter-spacing:-.01em;padding:18px 0;margin-right:24px;white-space:nowrap;}
+.logo{font-size:15px;font-weight:600;padding:18px 0;margin-right:24px;white-space:nowrap;}
 .logo span{color:var(--accent);}
 .nav{display:flex;align-items:stretch;gap:0;flex:1;}
 .nav-btn{
@@ -36,147 +35,162 @@ header{
 .tag{font-size:10px;padding:2px 7px;border-radius:20px;background:var(--bg);
   border:1px solid var(--border);color:var(--hint);font-family:var(--mono);}
 
-/* ── Pages ── */
-.page{display:none;}
-.page.active{display:block;}
+.page{display:none;} .page.active{display:block;}
 
 /* ── HOME ── */
-.home-wrap{max-width:640px;margin:0 auto;padding:60px 40px;}
+.home-wrap{max-width:700px;margin:0 auto;padding:52px 40px;}
 .home-wrap h2{font-size:22px;font-weight:600;margin-bottom:8px;}
-.home-wrap p{font-size:14px;color:var(--muted);margin-bottom:40px;line-height:1.7;}
-.tool-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-.tool-card{
-  background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:24px;cursor:pointer;transition:all .15s;text-align:left;
+.home-wrap > p{font-size:14px;color:var(--muted);margin-bottom:36px;line-height:1.7;}
+.flow-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;margin-bottom:20px;}
+.flow-card-hd{padding:14px 20px;background:var(--accent-light);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;}
+.flow-card-hd svg{width:16px;height:16px;color:var(--accent);}
+.flow-card-hd span{font-size:13px;font-weight:600;color:var(--accent);}
+.flow-card-bd{padding:0;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:14px 20px;
+  border-bottom:1px solid var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.flow-num{width:24px;height:24px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.flow-step h4{font-size:13px;font-weight:600;margin-bottom:3px;}
+.flow-step p{font-size:12px;color:var(--muted);line-height:1.5;}
+.flow-arrow{text-align:center;padding:6px;color:var(--hint);font-size:18px;}
+.start-btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:10px;
+  font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;
+  margin-top:8px;
 }
-.tool-card:hover{border-color:var(--accent);box-shadow:0 4px 16px rgba(42,92,63,.08);}
-.tool-card:active{transform:scale(.98);}
-.tool-card-icon{
-  width:40px;height:40px;background:var(--accent-light);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;margin-bottom:14px;
-}
-.tool-card-icon svg{width:20px;height:20px;color:var(--accent);}
-.tool-card h3{font-size:14px;font-weight:600;margin-bottom:5px;}
-.tool-card p{font-size:12px;color:var(--muted);line-height:1.6;}
-.tool-card .arrow{
-  display:flex;align-items:center;gap:4px;margin-top:14px;
-  font-size:12px;color:var(--accent);font-weight:500;
-}
-.tool-card .arrow svg{width:12px;height:12px;}
+.start-btn:hover{background:var(--accent-hover);}
+.start-btn svg{width:16px;height:16px;}
 
-/* ── 產生器 ── */
-.gen-main{max-width:960px;margin:0 auto;padding:36px 40px;
-  display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
-
-/* ── 填入工具 ── */
-.fill-wrap{max-width:1000px;margin:0 auto;padding:32px 40px;}
-.upload-zone{background:var(--surface);border:1.5px dashed var(--border);border-radius:14px;
-  padding:56px;text-align:center;cursor:pointer;transition:all .15s;}
-.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light);}
-.upload-icon{width:48px;height:48px;background:var(--accent-light);border-radius:12px;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
-.upload-icon svg{width:24px;height:24px;color:var(--accent);}
-.upload-zone h2{font-size:15px;font-weight:500;margin-bottom:6px;}
-.upload-zone p{font-size:13px;color:var(--muted);}
-#fileInput{display:none;}
-.result-grid{display:grid;grid-template-columns:240px 1fr;gap:18px;align-items:start;}
-
-/* ── Shared Panel ── */
+/* ── 共用 ── */
+.wrap{max-width:960px;margin:0 auto;padding:36px 40px;}
 .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .panel-hd{padding:12px 18px;border-bottom:1px solid var(--border);
-  font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;
+  font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;
   display:flex;align-items:center;justify-content:space-between;}
 .panel-bd{padding:18px;}
-.field{margin-bottom:16px;}
-.field:last-of-type{margin-bottom:0;}
+
+/* ── STEP1: 篩選填入工具 ── */
+.upload-zone{background:var(--surface);border:2px dashed var(--border);border-radius:14px;
+  padding:52px;text-align:center;cursor:pointer;transition:all .15s;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:var(--accent-light);}
+.upload-icon{width:52px;height:52px;background:var(--accent-light);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.upload-icon svg{width:26px;height:26px;color:var(--accent);}
+.upload-zone h2{font-size:15px;font-weight:600;margin-bottom:6px;}
+.upload-zone p{font-size:13px;color:var(--muted);}
+#fileInput{display:none;}
+
+.processing{background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:52px;text-align:center;display:none;}
+.spinner{width:40px;height:40px;border:3px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.processing p{font-size:13px;color:var(--muted);}
+.processing-steps{margin-top:16px;display:flex;flex-direction:column;gap:6px;align-items:center;}
+.p-step{font-size:12px;font-family:var(--mono);padding:4px 12px;border-radius:20px;
+  background:var(--bg);color:var(--hint);transition:all .3s;}
+.p-step.active{background:var(--accent-light);color:var(--accent);font-weight:500;}
+.p-step.done{background:#f0fdf4;color:var(--green);}
+
+/* ── 結果區 ── */
+.result-area{display:none;}
+.result-grid{display:grid;grid-template-columns:280px 1fr;gap:18px;align-items:start;}
+
+.file-badge{display:flex;align-items:center;gap:10px;padding:10px 12px;
+  background:var(--accent-light);border-radius:8px;margin-bottom:14px;}
+.file-badge svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;}
+.file-badge-name{font-size:12px;font-weight:600;color:var(--accent);word-break:break-all;}
+.file-badge-sub{font-size:11px;color:var(--green);}
+
+.summary-list{list-style:none;margin-bottom:14px;}
+.summary-list li{display:flex;align-items:center;gap:8px;padding:7px 0;
+  border-bottom:1px solid var(--border);font-size:12px;}
+.summary-list li:last-child{border-bottom:none;}
+.s-icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;}
+.s-icon svg{width:11px;height:11px;}
+.s-green{background:var(--accent-light);} .s-green svg{color:var(--accent);}
+.s-yellow{background:#fffbeb;} .s-yellow svg{color:#d97706;}
+.s-blue{background:#eff6ff;} .s-blue svg{color:#2563eb;}
+.summary-list span{color:var(--muted);}
+.summary-list strong{color:var(--text);}
+
+.divider{border:none;border-top:1px solid var(--border);margin:14px 0;}
+.btn{width:100%;padding:10px;display:flex;align-items:center;justify-content:center;
+  gap:8px;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;
+  font-weight:500;cursor:pointer;transition:all .15s;margin-bottom:8px;}
+.btn:last-child{margin-bottom:0;}
+.btn:active{transform:scale(.98);}
+.btn-green{background:var(--accent);color:#fff;} .btn-green:hover{background:var(--accent-hover);}
+.btn-outline{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
+.btn-outline:hover{background:var(--bg);color:var(--text);}
+.btn svg{width:14px;height:14px;flex-shrink:0;}
+.smsg{font-size:12px;text-align:center;margin-top:8px;font-family:var(--mono);min-height:16px;color:var(--green);}
+.smsg.err{color:var(--danger);}
+
+/* ── 預覽表格 ── */
+.tbl-wrap{overflow:auto;max-height:480px;}
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px;}
+thead th{background:var(--bg);padding:8px 10px;text-align:left;
+  border-bottom:1px solid var(--border);font-weight:600;color:var(--muted);
+  font-size:10px;position:sticky;top:0;z-index:1;white-space:nowrap;}
+tbody td{padding:6px 10px;border-bottom:1px solid var(--border);height:28px;
+  font-size:11px;white-space:nowrap;}
+tbody tr:last-child td{border-bottom:none;}
+.cy{background:#fef9c3;}
+.cv{color:var(--accent);font-weight:500;}
+.ce{color:var(--hint);}
+.tbl-foot{padding:8px 16px;font-size:11px;color:var(--hint);
+  border-top:1px solid var(--border);font-family:var(--mono);}
+
+/* ── 篩選表格產生器 ── */
+.gen-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}
+.field{margin-bottom:16px;} .field:last-of-type{margin-bottom:0;}
 label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;}
 input[type=number],input[type=text]{
   width:100%;font-family:var(--mono);font-size:13px;padding:9px 11px;
   border:1px solid var(--border);border-radius:8px;background:var(--bg);
-  color:var(--text);outline:none;transition:border-color .15s;
-}
+  color:var(--text);outline:none;transition:border-color .15s;}
 input:focus{border-color:var(--accent);}
 .hint-text{font-size:11px;color:var(--hint);margin-top:4px;}
-.divider{border:none;border-top:1px solid var(--border);margin:16px 0;}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
 .stat{background:var(--bg);border-radius:8px;padding:10px 12px;}
 .stat-lbl{font-size:11px;color:var(--muted);margin-bottom:2px;}
 .stat-val{font-family:var(--mono);font-size:18px;font-weight:500;}
-.stat-val.g{color:var(--green);}
-.file-badge{display:flex;align-items:center;gap:10px;padding:10px 12px;
-  background:var(--accent-light);border-radius:8px;margin-bottom:14px;}
-.file-badge svg{width:16px;height:16px;color:var(--accent);flex-shrink:0;}
-.file-badge-name{font-size:12px;font-weight:500;color:var(--accent);word-break:break-all;}
-.file-badge-sub{font-size:11px;color:var(--green);}
-.explain{font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:14px;
-  padding:10px 12px;background:var(--bg);border-radius:8px;border-left:3px solid var(--accent);}
-.explain strong{color:var(--text);}
-.btn{
-  width:100%;padding:10px;display:flex;align-items:center;justify-content:center;gap:8px;
-  border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:500;
-  cursor:pointer;transition:all .15s;margin-bottom:8px;
-}
-.btn:last-child{margin-bottom:0;}
-.btn:active{transform:scale(.98);}
-.btn-green{background:var(--accent);color:#fff;}
-.btn-green:hover{background:var(--accent-hover);}
-.btn-outline{background:var(--surface);color:var(--muted);border:1px solid var(--border);}
-.btn-outline:hover{background:var(--bg);color:var(--text);}
-.btn svg{width:14px;height:14px;flex-shrink:0;}
-.smsg{font-size:12px;text-align:center;margin-top:8px;font-family:var(--mono);
-  min-height:16px;color:var(--green);}
-.smsg.err{color:var(--danger);}
-
-/* ── Table ── */
-.tbl-wrap{overflow:auto;max-height:500px;}
-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;table-layout:fixed;}
-thead th,th{
-  background:var(--bg);padding:9px 12px;text-align:center;
-  border-bottom:1px solid var(--border);font-weight:500;color:var(--muted);font-size:11px;
-  position:sticky;top:0;z-index:1;white-space:nowrap;
-}
-th:first-child{text-align:left;}
-.flt{display:inline-flex;align-items:center;justify-content:center;
-  width:13px;height:13px;border:1px solid var(--border);border-radius:2px;
-  margin-left:4px;font-size:8px;color:var(--muted);vertical-align:middle;background:var(--surface);}
-tbody td,td{padding:7px 12px;text-align:center;border-bottom:1px solid var(--border);height:30px;
-  letter-spacing:.03em;font-size:12px;}
-td:first-child{text-align:left;color:var(--hint);}
-td.v,tbody td.mac{color:var(--accent);font-weight:500;}
-tbody tr:last-child td,tr:last-child td{border-bottom:none;}
-.tbl-foot{padding:9px 16px;font-size:11px;color:var(--hint);
-  border-top:1px solid var(--border);font-family:var(--mono);}
+td.v{color:var(--accent);font-weight:500;}
+.flt{display:inline-flex;align-items:center;justify-content:center;width:13px;height:13px;
+  border:1px solid var(--border);border-radius:2px;margin-left:4px;font-size:8px;
+  color:var(--muted);vertical-align:middle;background:var(--surface);}
 
 @media(max-width:720px){
-  header{padding:0 16px;}
-  .logo{margin-right:12px;}
-  .nav-btn{padding:0 10px;font-size:12px;}
-  .gen-main{grid-template-columns:1fr;padding:20px 16px;}
-  .fill-wrap{padding:20px 16px;}
-  .result-grid{grid-template-columns:1fr;}
-  .tool-cards{grid-template-columns:1fr;}
-  .home-wrap{padding:32px 16px;}
+  header{padding:0 16px;} .logo{margin-right:12px;} .nav-btn{padding:0 10px;font-size:12px;}
+  .wrap{padding:20px 16px;} .home-wrap{padding:32px 16px;}
+  .result-grid,.gen-grid{grid-template-columns:1fr;}
 }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">MAC <span>工具箱</span></div>
+  <div class="logo">MAC <span>完整自動化</span></div>
   <nav class="nav">
     <button class="nav-btn active" onclick="goPage('home')" id="nav-home">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       首頁
     </button>
-    <button class="nav-btn" onclick="goPage('gen')" id="nav-gen">
+    <button class="nav-btn" onclick="goPage('gen')" id="nav-gen" style="display:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       篩選表格產生器
-      <span class="tag">.xlsx</span>
+      <span class="tag">Step 1</span>
     </button>
-    <button class="nav-btn" onclick="goPage('fill')" id="nav-fill">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      篩選填入工具
-      <span class="tag">自動</span>
+    <button class="nav-btn" onclick="goPage('auto')" id="nav-auto">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      自動整合處理
+      
     </button>
   </nav>
 </header>
@@ -184,97 +198,135 @@ tbody tr:last-child td,tr:last-child td{border-bottom:none;}
 <!-- ══ HOME ══ -->
 <div class="page active" id="page-home">
   <div class="home-wrap">
-    <h2>MAC 工具箱</h2>
-    <p>兩個工具協同運作：先用「篩選表格產生器」產生含 AutoFilter 的 Excel 範本，再透過 Excel 篩選填入 MAC 值後，用「篩選填入工具」將結果整理成最終格式。</p>
-    <div class="tool-cards">
-      <div class="tool-card" onclick="goPage('gen')">
-        <div class="tool-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-        </div>
-        <h3>篩選表格產生器</h3>
-        <p>設定數量與欄位名稱，產生帶有 AutoFilter 的 Excel 範本供填入使用。</p>
-        <div class="arrow">
-          前往使用
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </div>
+    <h2>MAC 完整自動化工具</h2>
+    <p>上傳已填好 MAC 的 Excel（含「号段分配」工作表），自動產生「工廠使用」工作表，IMEI 複製至 A 欄，mac1~mac4 填入 B~E 欄，A/B/F/G 整欄黃色。</p>
+
+    <div class="flow-card" style="display:none;">
+      <div class="flow-card-hd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <span>Step 1 — 篩選表格產生器</span>
       </div>
-      <div class="tool-card" onclick="goPage('fill')">
-        <div class="tool-card-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <div class="flow-card-bd">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <div><h4>設定數量與欄位</h4><p>輸入 MAC 數量 N，產生帶 AutoFilter 的 Excel 範本（MAC, mac1~mac4）</p></div>
         </div>
-        <h3>篩選填入工具</h3>
-        <p>上傳已填好 MAC 的 Excel，自動整理成每列一組（mac1~mac4）的結果表。</p>
-        <div class="arrow">
-          前往使用
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <div><h4>在 Excel 中篩選填入</h4><p>用 AutoFilter 篩選，把 MAC 值分別填入 mac1~mac4 欄位</p></div>
         </div>
       </div>
     </div>
+
+    <div class="flow-arrow" style="display:none;">↓</div>
+
+    <div class="flow-card">
+      <div class="flow-card-hd">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span>Step 2 — 自動整合處理</span>
+      </div>
+      <div class="flow-card-bd">
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <div><h4>上傳已填好的 Excel</h4><p>需含「号段分配」工作表（IMEI + MAC）及已填入 mac1~mac4 的工作表</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">4</div>
+          <div><h4>自動執行篩選填入</h4><p>整理 MAC 欄位，產生 MAC/mac1~mac4 橫排結果（B~E 欄）</p></div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">5</div>
+          <div><h4>自動建立「工廠使用」工作表</h4><p>複製 IMEI 至 A 欄，B~E 欄填入 mac1~mac4，F/G 欄為 pcba sn / 組裝 sn 標題，A/B/F/G 整欄黃色</p></div>
+        </div>
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="goPage('auto')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      開始自動整合處理
+    </button>
   </div>
 </div>
 
-<!-- ══ 產生器 ══ -->
+<!-- ══ 篩選表格產生器 ══ -->
 <div class="page" id="page-gen">
-  <div class="gen-main">
-    <div class="panel">
-      <div class="panel-hd">設定</div>
-      <div class="panel-bd">
-        <div class="field">
-          <label>最大數字 N（產生 1 ~ N）</label>
-          <input type="number" id="maxNum" value="3000" min="1" max="99999"/>
+  <div class="wrap">
+    <div class="gen-grid">
+      <div class="panel">
+        <div class="panel-hd">設定</div>
+        <div class="panel-bd">
+          <div class="field">
+            <label>最大數字 N（產生 1 ~ N）</label>
+            <input type="number" id="maxNum" value="3000" min="1" max="99999"/>
+          </div>
+          <div class="field">
+            <label>欄位名稱（逗號分隔）</label>
+            <input type="text" id="colNames" value="MAC,mac1,mac2,mac3,mac4"/>
+            <p class="hint-text">第一欄為標題欄，其餘欄依序填入數值</p>
+          </div>
+          <div class="divider"></div>
+          <div class="stats-row">
+            <div class="stat"><div class="stat-lbl">資料列</div><div class="stat-val" id="sRows">12,000</div></div>
+            <div class="stat"><div class="stat-lbl">總列數</div><div class="stat-val" id="sTotal">12,001</div></div>
+          </div>
+          <div class="divider"></div>
+          <button class="btn btn-green" onclick="doDownload()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            下載 Excel 範本
+          </button>
+          <div id="genStatus" class="smsg"></div>
+          <div class="divider"></div>
+          <button class="btn btn-outline" onclick="goPage('auto')">
+            完成後前往 Step 2 →
+          </button>
         </div>
-        <div class="field">
-          <label>欄位名稱（逗號分隔）</label>
-          <input type="text" id="colNames" value="MAC,mac1,mac2,mac3,mac4"/>
-          <p class="hint-text">第一欄為標題欄，其餘欄依序填入數值</p>
-        </div>
-        <div class="divider"></div>
-        <div class="stats">
-          <div class="stat"><div class="stat-lbl">資料列</div><div class="stat-val" id="sRows">12,000</div></div>
-          <div class="stat"><div class="stat-lbl">總列數</div><div class="stat-val" id="sTotal">12,001</div></div>
-        </div>
-        <div class="divider"></div>
-        <button class="btn btn-green" onclick="doDownload()">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          下載 Excel
-        </button>
-        <div id="genStatus" class="smsg"></div>
       </div>
-    </div>
-    <div class="panel">
-      <div class="panel-hd">預覽</div>
-      <div class="tbl-wrap">
-        <table id="prevTbl"></table>
+      <div class="panel">
+        <div class="panel-hd">預覽</div>
+        <div class="tbl-wrap"><table id="prevTbl"></table></div>
+        <div class="tbl-foot" id="tbl-foot"></div>
       </div>
-      <div class="tbl-foot" id="tbl-foot"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ 填入工具 ══ -->
-<div class="page" id="page-fill">
-  <div class="fill-wrap">
-    <div id="uploadArea">
-      <div class="upload-zone" id="dropZone"
-        onclick="document.getElementById('fileInput').click()"
-        ondragover="onDragOver(event)" ondragleave="onDragLeave()" ondrop="onDrop(event)">
-        <div class="upload-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-          </svg>
-        </div>
-        <h2>點擊或拖曳上傳 Excel 檔案</h2>
-        <p>上傳含 MAC 欄位的 Excel，自動整理成 mac1~mac4 橫排格式</p>
+<!-- ══ 自動整合處理 ══ -->
+<div class="page" id="page-auto">
+  <div class="wrap">
+
+    <!-- 上傳區 -->
+    <div id="uploadZone" class="upload-zone"
+      onclick="document.getElementById('fileInput').click()"
+      ondragover="onDragOver(event)" ondragleave="onDragLeave()" ondrop="onDrop(event)">
+      <div class="upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
       </div>
-      <input type="file" id="fileInput" accept=".xlsx,.xls" onchange="onFileChange(event)"/>
+      <h2>點擊或拖曳上傳 Excel 檔案</h2>
+      <p>需包含「号段分配」工作表（IMEI + MAC）</p>
+    </div>
+    <input type="file" id="fileInput" accept=".xlsx,.xls" onchange="onFileChange(event)"/>
+
+    <!-- 處理中 -->
+    <div id="processingArea" class="processing">
+      <div class="spinner"></div>
+      <p id="processingMsg">處理中...</p>
+      <div class="processing-steps">
+        <div class="p-step" id="ps1">① 讀取 号段分配</div>
+        <div class="p-step" id="ps2">② 整理 MAC → mac1~mac4</div>
+        <div class="p-step" id="ps3">③ 建立 工廠使用 工作表</div>
+        <div class="p-step" id="ps4">④ 複製 IMEI + mac1~mac4</div>
+        <div class="p-step" id="ps5">⑤ 套用黃色格式</div>
+      </div>
     </div>
 
-    <div id="resultArea" style="display:none;">
+    <!-- 結果 -->
+    <div id="resultArea" class="result-area">
       <div class="result-grid">
         <div>
           <div class="panel">
@@ -287,38 +339,58 @@ tbody tr:last-child td,tr:last-child td{border-bottom:none;}
                   <div class="file-badge-sub" id="fInfo"></div>
                 </div>
               </div>
-              <div class="stats">
-                <div class="stat"><div class="stat-lbl">原始列數</div><div class="stat-val" id="s1">—</div></div>
-                <div class="stat"><div class="stat-lbl">結果列數</div><div class="stat-val g" id="s2">—</div></div>
-              </div>
-              <div class="explain">
-                A欄（MAC）逐列保留，<br>
-                <strong>mac1~mac4</strong> 每4列橫排一組：<br>
-                第1組：列1~4 → mac1~mac4<br>
-                第2組：列5~8 → mac1~mac4
-              </div>
+              <ul class="summary-list">
+                <li>
+                  <div class="s-icon s-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <span>IMEI 列數：</span><strong id="sumImei">—</strong>
+                </li>
+                <li>
+                  <div class="s-icon s-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <span>MAC 組數：</span><strong id="sumMac">—</strong>
+                </li>
+                <li>
+                  <div class="s-icon s-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+                  <span>新增工作表：</span><strong>工廠使用</strong>
+                </li>
+                <li>
+                  <div class="s-icon s-yellow"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>
+                  <span>黃色欄位：</span><strong>A、B、F、G</strong>
+                </li>
+              </ul>
               <button class="btn btn-green" onclick="downloadResult()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                 下載 Excel
               </button>
               <div class="smsg" id="dlMsg"></div>
               <div class="divider"></div>
-              <button class="btn btn-outline" onclick="reUpload()">重新上傳</button>
+              <button class="btn btn-outline" onclick="resetAll()">重新上傳</button>
             </div>
           </div>
         </div>
+
+        <!-- 預覽 -->
         <div class="panel">
           <div class="panel-hd">
-            <span>結果預覽</span>
-            <span id="tblCount" style="font-family:var(--mono);font-size:10px;color:var(--hint);"></span>
+            <span>「工廠使用」工作表預覽</span>
+            <span id="previewCount" style="font-family:var(--mono);font-size:10px;color:var(--hint);"></span>
           </div>
           <div class="tbl-wrap">
             <table>
-              <thead><tr id="tblHead"></tr></thead>
-              <tbody id="tblBody"></tbody>
+              <thead>
+                <tr>
+                  <th class="cy">A　IMEI</th>
+                  <th class="cy">B　mac1</th>
+                  <th>C　mac2</th>
+                  <th>D　mac3</th>
+                  <th>E　mac4</th>
+                  <th class="cy">F　pcba sn</th>
+                  <th class="cy">G　組裝sn</th>
+                </tr>
+              </thead>
+              <tbody id="previewBody"></tbody>
             </table>
           </div>
-          <div class="tbl-foot" id="tblFoot"></div>
+          <div class="tbl-foot" id="previewFoot"></div>
         </div>
       </div>
     </div>
@@ -337,32 +409,24 @@ function goPage(id){
 }
 
 /* ══ 篩選表格產生器 ══ */
-function getCols(){
-  return document.getElementById('colNames').value.split(',').map(s=>s.trim()).filter(Boolean);
-}
-function getMax(){
-  return Math.max(1,Math.min(99999,parseInt(document.getElementById('maxNum').value)||3000));
-}
-function update(){
-  const n=getMax(),cols=getCols(),dc=Math.max(1,cols.length-1);
-  const dr=n*dc;
+function getCols(){return document.getElementById('colNames').value.split(',').map(s=>s.trim()).filter(Boolean);}
+function getMax(){return Math.max(1,Math.min(99999,parseInt(document.getElementById('maxNum').value)||3000));}
+function updateGen(){
+  const n=getMax(),cols=getCols(),dc=Math.max(1,cols.length-1),dr=n*dc;
   document.getElementById('sRows').textContent=dr.toLocaleString();
   document.getElementById('sTotal').textContent=(dr+1).toLocaleString();
-  renderPreview(cols,n,dc);
-}
-function renderPreview(cols,max,dc){
-  const show=Math.min(max*dc,16);
+  const show=Math.min(n*dc,16);
   let html='<thead><tr>';
   cols.forEach(c=>{html+=`<th>${c}<span class="flt">▾</span></th>`;});
   html+='</tr></thead><tbody>';
   let cnt=0;
-  outer:for(let n=1;n<=max;n++){
+  outer:for(let i=1;i<=n;i++){
     for(let d=0;d<dc;d++){
       if(cnt>=show)break outer;
       html+='<tr>';
       cols.forEach((_,ci)=>{
         if(ci===0)html+='<td></td>';
-        else if(ci-1===d)html+=`<td class="v">${n}</td>`;
+        else if(ci-1===d)html+=`<td class="v">${i}</td>`;
         else html+='<td></td>';
       });
       html+='</tr>';cnt++;
@@ -370,10 +434,8 @@ function renderPreview(cols,max,dc){
   }
   html+='</tbody>';
   document.getElementById('prevTbl').innerHTML=html;
-  const rem=max*dc-show;
-  document.getElementById('tbl-foot').textContent=rem>0
-    ?`... 還有 ${rem.toLocaleString()} 列未顯示`
-    :`共 ${(max*dc).toLocaleString()} 列資料`;
+  const rem=n*dc-show;
+  document.getElementById('tbl-foot').textContent=rem>0?`... 還有 ${rem.toLocaleString()} 列未顯示`:`共 ${(n*dc).toLocaleString()} 列資料`;
 }
 function doDownload(){
   const cols=getCols(),max=getMax(),dc=cols.length-1;
@@ -395,110 +457,192 @@ function doDownload(){
       XLSX.writeFile(wb,`mac_篩選表格${max}.xlsx`);
       st.style.color='var(--green)';
       st.textContent=`✓ 已下載 mac_篩選表格${max}.xlsx`;
-    }catch(e){
-      st.className='smsg err';st.textContent='錯誤：'+e.message;
-    }
+    }catch(e){st.className='smsg err';st.textContent='錯誤：'+e.message;}
   },50);
 }
-document.getElementById('maxNum').addEventListener('input',update);
-document.getElementById('colNames').addEventListener('input',update);
-update();
+document.getElementById('maxNum').addEventListener('input',updateGen);
+document.getElementById('colNames').addEventListener('input',updateGen);
+updateGen();
 
-/* ══ 篩選填入工具 ══ */
-let RESULT_HEADERS=[],RESULT_ROWS=[],RAW_HEADERS=[],RAW_ROWS=[],baseName='';
-const RENDER=300;
+/* ══ 自動整合處理 ══ */
+let resultWB=null, baseName='', previewRows=[];
+const PREVIEW_LIMIT=200;
+const YELLOW_COLS=[0,1,5,6]; // A,B,F,G
 
-function onDragOver(e){e.preventDefault();document.getElementById('dropZone').classList.add('drag');}
-function onDragLeave(){document.getElementById('dropZone').classList.remove('drag');}
-function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files[0];if(f)loadFile(f);}
-function onFileChange(e){const f=e.target.files[0];if(f)loadFile(f);}
+function onDragOver(e){e.preventDefault();document.getElementById('uploadZone').classList.add('drag');}
+function onDragLeave(){document.getElementById('uploadZone').classList.remove('drag');}
+function onDrop(e){e.preventDefault();onDragLeave();const f=e.dataTransfer.files[0];if(f)processFile(f);}
+function onFileChange(e){const f=e.target.files[0];if(f)processFile(f);}
 
-function loadFile(file){
+function setStep(n){
+  for(let i=1;i<=5;i++){
+    const el=document.getElementById('ps'+i);
+    if(i<n)el.className='p-step done';
+    else if(i===n)el.className='p-step active';
+    else el.className='p-step';
+  }
+}
+
+function processFile(file){
   baseName=file.name.replace(/\.[^.]+$/,'');
+  document.getElementById('uploadZone').style.display='none';
+  document.getElementById('processingArea').style.display='block';
+  setStep(1);
+
   const reader=new FileReader();
   reader.onload=function(ev){
-    const wb=XLSX.read(ev.target.result,{type:'array'});
-    const ws=wb.Sheets[wb.SheetNames[0]];
-    const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
-    RAW_HEADERS=raw[0]?raw[0].map(h=>h===null?'':String(h)):[];
-    RAW_ROWS=raw.slice(1).filter(r=>r.some(v=>v!==null&&v!==undefined&&v!==''));
+    setTimeout(()=>{
+      try{
+        const wb=XLSX.read(ev.target.result,{type:'array'});
 
-    const macColIdx=RAW_HEADERS.findIndex(h=>String(h).toUpperCase()==='MAC');
-    const useMacCol=macColIdx>=0?macColIdx:0;
-    const numCols=4;
+        // ① 找「号段分配」
+        const srcName=wb.SheetNames.find(n=>n.includes('号段分配'));
+        if(!srcName){
+          alert('找不到「号段分配」工作表，請確認檔案格式。');
+          resetAll(); return;
+        }
+        const srcWS=wb.Sheets[srcName];
+        const srcData=XLSX.utils.sheet_to_json(srcWS,{header:1,defval:null});
 
-    RESULT_HEADERS=['MAC','mac1','mac2','mac3','mac4'];
-    RESULT_ROWS=[];
+        // 取 IMEI（A欄）含標題
+        const imeiData=srcData.map(r=>r[0]!=null?String(r[0]):'');
 
-    const allMacs=RAW_ROWS.map(r=>{
-      const v=r[useMacCol];
-      return v!==null&&v!==undefined?String(v):'';
-    });
+        // 取 MAC（B欄）排除標題
+        const macRaw=srcData.slice(1).map(r=>r[1]!=null?String(r[1]):'').filter(v=>v);
 
-    const totalGroups=Math.ceil(allMacs.length/numCols);
-    for(let i=0;i<totalGroups;i++){
-      const aVal=allMacs[i]||'';
-      const groupStart=i*numCols;
-      const newRow=[aVal];
-      for(let j=0;j<numCols;j++){
-        newRow.push(allMacs[groupStart+j]||'');
+        setStep(2);
+        setTimeout(()=>{
+
+          // ② 整理 MAC → mac1~mac4（每4列一組）
+          const numCols=4;
+          const totalGroups=Math.ceil(macRaw.length/numCols);
+          // macGroups[i] = [mac1,mac2,mac3,mac4]
+          const macGroups=[];
+          for(let i=0;i<totalGroups;i++){
+            const g=i*numCols;
+            macGroups.push([
+              macRaw[g]||'', macRaw[g+1]||'', macRaw[g+2]||'', macRaw[g+3]||''
+            ]);
+          }
+
+          setStep(3);
+          setTimeout(()=>{
+
+            // ③ 移除舊「工廠使用」
+            if(wb.SheetNames.includes('工廠使用')){
+              const idx=wb.SheetNames.indexOf('工廠使用');
+              wb.SheetNames.splice(idx,1);
+              delete wb.Sheets['工廠使用'];
+            }
+
+            setStep(4);
+            setTimeout(()=>{
+
+              // ④ 建「工廠使用」工作表
+              // 欄位：A=IMEI, B=mac1, C=mac2, D=mac3, E=mac4, F=pcba sn, G=組裝sn
+              const newData=imeiData.map((imei,i)=>{
+                if(i===0) return ['IMEI','mac1','mac2','mac3','mac4',
+                  'pcba sn(按照Thinkstart規則生成)','組裝sn(按照Thinkstart規則生成)'];
+                const g=macGroups[i-1]||['','','',''];
+                return [imei, g[0], g[1], g[2], g[3], '', ''];
+              });
+
+              const newWS=XLSX.utils.aoa_to_sheet(newData);
+
+              setStep(5);
+              setTimeout(()=>{
+
+                // ⑤ 套用黃色（A,B,F,G 欄）
+                const totalRows=newData.length;
+                const ys={fill:{patternType:'solid',fgColor:{rgb:'FFFF00'}}};
+                for(let r=0;r<totalRows;r++){
+                  YELLOW_COLS.forEach(c=>{
+                    const addr=XLSX.utils.encode_cell({r,c});
+                    if(!newWS[addr]) newWS[addr]={t:'s',v:''};
+                    newWS[addr].s=ys;
+                  });
+                }
+                newWS['!cols']=[{wch:18},{wch:16},{wch:16},{wch:16},{wch:16},{wch:28},{wch:28}];
+
+                XLSX.utils.book_append_sheet(wb,newWS,'工廠使用');
+                resultWB=wb;
+
+                // 預覽資料
+                previewRows=newData;
+
+                // 更新 UI
+                document.getElementById('processingArea').style.display='none';
+                document.getElementById('fName').textContent=file.name;
+                document.getElementById('fInfo').textContent=`${wb.SheetNames.length} 個工作表`;
+                document.getElementById('sumImei').textContent=`${(imeiData.length-1).toLocaleString()} 筆`;
+                document.getElementById('sumMac').textContent=`${totalGroups.toLocaleString()} 組`;
+                document.getElementById('previewCount').textContent=`${newData.length.toLocaleString()} 列`;
+
+                buildPreview();
+                document.getElementById('resultArea').style.display='block';
+
+              },100);
+            },100);
+          },100);
+        },100);
+      }catch(err){
+        alert('處理失敗：'+err.message);
+        resetAll();
       }
-      RESULT_ROWS.push(newRow);
-    }
-
-    document.getElementById('fName').textContent=file.name;
-    document.getElementById('fInfo').textContent=`${RAW_HEADERS.length} 欄 × ${RAW_ROWS.length.toLocaleString()} 列`;
-    document.getElementById('s1').textContent=RAW_ROWS.length.toLocaleString();
-    document.getElementById('s2').textContent=RESULT_ROWS.length.toLocaleString();
-    document.getElementById('uploadArea').style.display='none';
-    document.getElementById('resultArea').style.display='block';
-    buildTable();
+    },200);
   };
   reader.readAsArrayBuffer(file);
 }
 
-function reUpload(){
-  document.getElementById('resultArea').style.display='none';
-  document.getElementById('uploadArea').style.display='block';
-  document.getElementById('fileInput').value='';
-  document.getElementById('dlMsg').textContent='';
-}
-
-function buildTable(){
-  document.getElementById('tblHead').innerHTML=
-    RESULT_HEADERS.map(h=>`<th>${h}<span class="flt">▾</span></th>`).join('');
-  const limit=Math.min(RESULT_ROWS.length,RENDER);
+function buildPreview(){
+  const limit=Math.min(previewRows.length,PREVIEW_LIMIT);
   let html='';
   for(let i=0;i<limit;i++){
+    const r=previewRows[i];
+    const isHdr=i===0;
     html+='<tr>';
-    RESULT_ROWS[i].forEach(v=>{html+=`<td class="mac">${v||''}</td>`;});
+    // A IMEI - yellow
+    html+=`<td class="cy ${isHdr?'':'cv'}">${r[0]||''}</td>`;
+    // B mac1 - yellow
+    html+=`<td class="cy ${r[1]?'cv':'ce'}">${r[1]||''}</td>`;
+    // C mac2
+    html+=`<td class="${r[2]?'cv':'ce'}">${r[2]||''}</td>`;
+    // D mac3
+    html+=`<td class="${r[3]?'cv':'ce'}">${r[3]||''}</td>`;
+    // E mac4
+    html+=`<td class="${r[4]?'cv':'ce'}">${r[4]||''}</td>`;
+    // F pcba sn - yellow
+    html+=`<td class="cy ce">${r[5]||''}</td>`;
+    // G 組裝sn - yellow
+    html+=`<td class="cy ce">${r[6]||''}</td>`;
     html+='</tr>';
   }
-  document.getElementById('tblBody').innerHTML=html;
-  document.getElementById('tblCount').textContent=`${RESULT_ROWS.length.toLocaleString()} 列`;
-  document.getElementById('tblFoot').textContent=
-    limit<RESULT_ROWS.length
-      ?`顯示前 ${limit.toLocaleString()} / ${RESULT_ROWS.length.toLocaleString()} 列`
-      :`共 ${RESULT_ROWS.length.toLocaleString()} 列`;
+  document.getElementById('previewBody').innerHTML=html;
+  const rem=previewRows.length-limit;
+  document.getElementById('previewFoot').textContent=rem>0
+    ?`顯示前 ${limit.toLocaleString()} / ${previewRows.length.toLocaleString()} 列`
+    :`共 ${previewRows.length.toLocaleString()} 列`;
 }
 
 function downloadResult(){
+  if(!resultWB) return;
   const st=document.getElementById('dlMsg');
   st.className='smsg';st.textContent='生成中...';
   setTimeout(()=>{
     try{
-      const wb=XLSX.utils.book_new();
-      const wsData=[RESULT_HEADERS,...RESULT_ROWS];
-      const ws=XLSX.utils.aoa_to_sheet(wsData);
-      ws['!cols']=RESULT_HEADERS.map(()=>({wch:16}));
-      ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:0,c:RESULT_HEADERS.length-1}})};
-      XLSX.utils.book_append_sheet(wb,ws,'工作表1');
-      XLSX.writeFile(wb,`${baseName}_填入結果.xlsx`);
-      st.className='smsg';st.textContent='✓ 已下載完成';
-    }catch(e){
-      st.className='smsg err';st.textContent='錯誤：'+e.message;
-    }
+      XLSX.writeFile(resultWB,`${baseName}_工廠使用.xlsx`);
+      st.textContent='✓ 已下載完成';
+    }catch(e){st.className='smsg err';st.textContent='錯誤：'+e.message;}
   },50);
+}
+
+function resetAll(){
+  resultWB=null; previewRows=[];
+  document.getElementById('resultArea').style.display='none';
+  document.getElementById('processingArea').style.display='none';
+  document.getElementById('uploadZone').style.display='block';
+  document.getElementById('fileInput').value='';
+  document.getElementById('dlMsg').textContent='';
 }
 </script>
 </body>
